@@ -1,0 +1,9 @@
+.bckgr {
+    background: url("../assets/1.jpg");
+    z-index: -999999;
+    width: 100%;
+    height: auto;
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover;
+    background-position: center;
+}

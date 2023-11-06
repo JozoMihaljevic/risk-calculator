@@ -1,0 +1,399 @@
+<div class="top-content">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2 text">
+        <h1>Kalkulator <strong>rizika</strong> za obolijevanje od kardiovaskularnih bolesti i dijabetesa tipa 2</h1>
+        <div class="description">
+          <p>
+            Ovdje možete dobiti informacije o Vašem<strong> riziku </strong>i sklonosti prema nekim bolestima. <br>
+            Jednostavno unesite<strong> Vaše podatke</strong> i kalkulator će Vam dati preporuke!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 form-box">
+      <form role="form" action="" method="post" class="f1">
+        <div [hidden]="submitted">
+          <h3>Osobni podaci:</h3>
+          {{ diagnostic }}
+          <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+            TODO: remove this: {{ osobniPodaci.spol }}
+            {{ osobniPodaci.dob }},
+            {{ osobniPodaci.visina }},
+            {{ osobniPodaci.masa }},
+            {{ osobniPodaci.struk }},
+            {{ osobniPodaci.bokovi }}
+            {{ bodyFatPostotak }}
+
+            <div class="f1">
+              <div class="form-group">
+                <label for="spol">Spol</label>
+                <select [(ngModel)]="osobniPodaci.spol" class="form-control" id="spol" name="spol" required *ngIf="spolovi">
+                  <option *ngFor="let spol of spolovi" [value]="spol.key">{{ spol.name }}</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="dob">Dob</label>
+                <input type="text" class="form-control" id="dob" name="dob" required appSamobrojevi #dob="ngModel"
+                  [(ngModel)]="osobniPodaci.dob" (ngModelChange)="racunajBmi()">
+              </div>
+              <div [hidden]="dob.valid || dob.pristine" class="alert alert-danger">
+                Obavezno unijeti dob!
+              </div>
+
+              <div class="form-group">
+                <label for="visina">Visina</label>
+                <input type="text" class="form-control" id="visina" name="visina" required appSamobrojevi [(ngModel)]="osobniPodaci.visina"
+                  #visina="ngModel" (ngModelChange)="racunajBmi()">
+              </div>
+              <div [hidden]="visina.valid || visina.pristine" class="alert alert-danger">
+                Obavezno unijeti visinu!
+              </div>
+
+              <div class="form-group">
+                <label for="masa">Masa</label>
+                <input type="text" class="form-control" id="masa" name="masa" required appSamobrojevi [(ngModel)]="osobniPodaci.masa"
+                  #masa="ngModel" (ngModelChange)="racunajBmi()">
+              </div>
+              <div [hidden]="masa.valid || masa.pristine" class="alert alert-danger">
+                Obavezno unijeti masu!
+              </div>
+
+              <div class="form-group">
+                <label for="struk">Struk</label>
+                <input type="text" class="form-control" id="struk" name="struk" appSamobrojevi [(ngModel)]="osobniPodaci.struk"
+                  #struk="ngModel" (ngModelChange)="racunajWHRstrukbokovi()">
+              </div>
+
+              <div class="form-group">
+                <label for="bokovi">Bokovi</label>
+                <input type="text" class="form-control" id="bokovi" name="bokovi" appSamobrojevi [(ngModel)]="osobniPodaci.bokovi"
+                  #bokovi="ngModel" (ngModelChange)="racunajWHRstrukvisina()">
+              </div>
+            </div>
+
+            <h3>Biokemijski i imunokemijski parametri:</h3>
+            <div class="f1">
+              <div class="form-group">
+                <label for="glukoza">Glukoza</label>
+                <input type="text" class="form-control" id="glukoza" name="glukoza" required appSamobrojevi #glukoza="ngModel"
+                  [(ngModel)]="krvnaSlika.glukoza" (ngModelChange)="racunajHomaIr()" (ngModelChange)="racunajHomaBeta()">
+              </div>
+              <div [hidden]="glukoza.valid || glukoza.pristine" class="alert alert-danger">
+                Obavezno unijeti glukozu!
+              </div>
+
+              <div class="form-group">
+                <label for="inzulin">Inzulin</label>
+                <input type="text" class="form-control" id="inzulin" name="inzulin" appSamobrojevi [(ngModel)]="krvnaSlika.inzulin"
+                  #inzulin="ngModel" (ngModelChange)="racunajHomaIr()" (ngModelChange)="racunajHomaBeta()">
+              </div>
+
+              <div class="form-group">
+                <label for="ukupnikol">Ukupni kolesterol</label>
+                <input type="text" class="form-control" id="ukupnikol" name="ukupnikol" required appSamobrojevi
+                  [(ngModel)]="krvnaSlika.ukupnikol" #ukupnikol="ngModel">
+              </div>
+              <div [hidden]="ukupnikol.valid || ukupnikol.pristine" class="alert alert-danger">
+                Obavezno unijeti ukupni kolesterol!
+              </div>
+
+              <div class="form-group">
+                <label for="ldlkol">LDL kolesterol</label>
+                <input type="text" class="form-control" id="ldlkol" name="ldlkol" required appSamobrojevi [(ngModel)]="krvnaSlika.ldlkol"
+                  #ldlkol="ngModel">
+              </div>
+              <div [hidden]="ldlkol.valid || ldlkol.pristine" class="alert alert-danger">
+                Obavezno unijeti LDL kolesterol!
+              </div>
+
+              <div class="form-group">
+                <label for="hdlkol">HDL kolesterol</label>
+                <input type="text" class="form-control" id="hdlkol" name="hdlkol" required appSamobrojevi [(ngModel)]="krvnaSlika.hdlkol"
+                  #hdlkol="ngModel">
+              </div>
+              <div [hidden]="hdlkol.valid || hdlkol.pristine" class="alert alert-danger">
+                Obavezno unijeti HDL kolesterol!
+              </div>
+
+              <div class="form-group">
+                <label for="trigliceridi">Trigliceridi</label>
+                <input type="text" class="form-control" id="trigliceridi" name="trigliceridi" required appSamobrojevi
+                  [(ngModel)]="krvnaSlika.trigliceridi" #trigliceridi="ngModel">
+              </div>
+              <div [hidden]="trigliceridi.valid || trigliceridi.pristine" class="alert alert-danger">
+                Obavezno unijeti trigliceride!
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" (click)="ponistiUnos(); heroForm.reset()">Poništi</button>
+            <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid" (click)="racunajPrikazi()">Dalje</button>
+          </form>
+        </div>
+
+        <div>
+          <h2>Vaši rezultati:</h2>
+
+          <!--Tablica rezultata-->
+          <div class="row">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Varijabla</th>
+                  <th scope="col">Rezultat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Spol</th>
+                  <td>{{ osobniPodaci.spol }}</td>
+                </tr>
+                <tr>
+                  <th>Dob</th>
+                  <td>{{ osobniPodaci.dob }} godina</td>
+                </tr>
+                <tr>
+                  <th>Visina</th>
+                  <td>{{ osobniPodaci.visina }} cm</td>
+                </tr>
+                <tr>
+                  <th>Masa</th>
+                  <td>{{ osobniPodaci.masa }} kg</td>
+                </tr>
+                <tr *ngIf="osobniPodaci.struk; else strukNedostaje">
+                  <th>Struk</th>
+                  <td>{{ osobniPodaci.struk }} cm</td>
+                </tr>
+                <ng-template #strukNedostaje>
+                  <tr>
+                    <th>Struk</th>
+                    <td>Nedostaje parametar</td>
+                  </tr>
+                </ng-template>
+                <tr *ngIf="osobniPodaci.bokovi; else bokoviNedostaje">
+                  <th>Bokovi</th>
+                  <td>{{ osobniPodaci.bokovi }} cm</td>
+                </tr>
+                <ng-template #bokoviNedostaje>
+                  <tr>
+                    <th>Bokovi</th>
+                    <td>Nedostaje parametar</td>
+                  </tr>
+                </ng-template>
+                <tr>
+                  <th>Glukoza</th>
+                  <td>{{ krvnaSlika.glukoza }} mmol/L</td>
+                </tr>
+                <tr *ngIf="krvnaSlika.inzulin; else inzulinNedostaje">
+                  <th>Inzulin</th>
+                  <td>{{ krvnaSlika.inzulin }} pmol/L</td>
+                </tr>
+                <ng-template #inzulinNedostaje>
+                  <tr>
+                    <th>Inzulin</th>
+                    <td>Nedostaje parametar</td>
+                  </tr>
+                </ng-template>
+                <tr>
+                  <th>Ukupni kolesterol</th>
+                  <td>{{ krvnaSlika.ukupnikol }} mmol/L</td>
+                </tr>
+                <tr>
+                  <th>LDL kolesterol</th>
+                  <td>{{ krvnaSlika.ldlkol }} mmol/L</td>
+                </tr>
+                <tr>
+                  <th>HDL kolesterol</th>
+                  <td>{{ krvnaSlika.hdlkol }} mmol/L</td>
+                </tr>
+                <tr>
+                  <th>Trigliceridi</th>
+                  <td>{{ krvnaSlika.trigliceridi }} mmol/L</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+
+          <div class="row" *ngIf="bmi">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                <strong>BMI: {{ bmi.toFixed(2) }}</strong>
+
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  Vaša Preporučena TM: {{ preporucenaTjelesnaMasa }}kg
+                </li>
+                <li class="list-group-item">
+                  {{ bmiPoruka }}
+                </li>
+                <li class="list-group-item">
+                  Vaš BFP: {{ bodyFatPostotak }}%
+                </li>
+                <li class="list-group-item">
+                  {{ bodyFatPostotakPoruka }}
+                </li>
+                <li class="list-group-item">
+                  Postotak tjelesne masti izračunat na temelju dobi, spola, visine i težine predstavlja
+                  jedan od
+                  parametara
+                  za procjenu rizika od nastanka kardiovaskularnih bolesti.
+                </li>
+                <li class="list-group-item" *ngIf="whr">
+                  Vaš WHR: {{ whr.toFixed(2) }}
+                </li>
+                <li class="list-group-item">
+                  {{ whrPoruka }}
+                </li>
+                <li class="list-group-item" *ngIf="whr2">
+                  Vaš WHR2: {{ whr2.toFixed(2) }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+
+          <div class="row" *ngIf="homaIr">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                <strong>HOMA – IR: {{ homaIr.toFixed(2) }}</strong>
+
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  HOMA – IR je pokazatelj osjetljivosti stanica na djelovanje inzulina te marker inzulinske
+                  rezistencije, a HOMA – β je marker koji daje uvid u aktivnost beta – Langerhansonovih otočića
+                  odgovornih za proizvodnju inzulina u gušterači.
+                  <br>Ova dva parametra se računaju različitim omjerima
+                  glukoze i inzulina i predstavljaju jasan pokazatelj nastanka dijabetesa tipa 2 i do 10 godina prije
+                  pojave prvih simptoma i bolesti.
+                </li>
+                <li class="list-group-item">
+                  {{ homaIrPoruka }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="homaBeta">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                <strong>HOMA – Beta: {{ homaBeta.toFixed(2) }}</strong>
+
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  {{ homaBetaPoruka }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                <strong>Glukoza: {{ krvnaSlika.glukoza }} mmol/L</strong>
+
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  {{ glukozaPoruka }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                <strong>Ukupni kolesterol: {{ krvnaSlika.ukupnikol }} mmol/L</strong>
+
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  {{ ukupniKolesterolPoruka }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                <strong>LDL kolesterol: {{ krvnaSlika.ldlkol }} mmol/L</strong>
+
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  {{ ldlKolesterolPoruka }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                <strong>HDL kolesterol: {{ krvnaSlika.hdlkol }} mmol/L</strong>
+
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  {{ hdlKolesterolPoruka }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                <strong>Trigliceridi: {{ krvnaSlika.trigliceridi }} mmol/L</strong>
+
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  {{ trigliceridiPoruka }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-4">Ukupni rizik</div>
+            <div class="col-xs-8  pull-left">{{ rizikUkupni }}</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4">Ukupni rizik (%)</div>
+            <div class="col-xs-8  pull-left">{{ rizikUkupniPostotak }}%</div>
+          </div>
+
+          <div class="row" *ngIf="krvnaSlika.inzulin && osobniPodaci.struk && osobniPodaci.bokovi;
+          else ukupniRizikNedostajeParametar">
+            <div class="card" style="width: 100%;">
+              <div class="card-header">
+                <strong>Ukupni rizik</strong>
+
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  {{ rizikUkupniPoruka }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <ng-template #ukupniRizikNedostajeParametar>
+            <div class="row">
+              <p>Za opis potpunog rizika potrebno je unijeti sve parametre</p>
+            </div>
+          </ng-template>
+          <br>
+          <button class="btn btn-primary" (click)="submitted=false">Natrag</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
